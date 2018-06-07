@@ -1455,33 +1455,15 @@ class CompletionProposalPopup implements IContentAssistListener {
 
 		case '\t':
 			e.doit = false;
-			int newSelection = fProposalTable.getSelectionIndex();
-			int itemCount = fProposalTable.getItemCount();
-			// fProposalShell.setFocus();
-			if (0 == (e.stateMask & SWT.SHIFT)) {
-				newSelection += 1;
-				if (newSelection > itemCount - 1)
-					newSelection = 0;
-			} else {
-				newSelection -= 1;
-				if (newSelection < 0)
-					newSelection = itemCount - 1;
-			}
-			selectProposal(newSelection, (e.stateMask & SWT.CTRL) != 0);
+			insertSelectedProposalWithMask(e.stateMask);
 			return false;
 
 		default:
-			if (key < 'A' || (key > 'Z' && key < 'a') || key > 'z') {
-				hide();
-			}
 			ICompletionProposal proposal = getSelectedProposal();
 			if (proposal instanceof ICompletionProposalExtension) {
 				ICompletionProposalExtension t = (ICompletionProposalExtension) proposal;
 				char[] triggers = t.getTriggerCharacters();
-				// if (null != triggers && 0 != triggers.length) {
-				// System.out.println(String.valueOf(triggers));
-				// }
-				if (contains(triggers, key)) {
+				if (key!='='&&key!=0x20&&key!='.'&&key!=';'&&contains(triggers, key)) {
 					e.doit = false;
 					hide();
 					insertProposal(proposal, key, e.stateMask,
